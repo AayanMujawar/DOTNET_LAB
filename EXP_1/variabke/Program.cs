@@ -14,6 +14,7 @@
             int num2 = Convert.ToInt32(Console.ReadLine());
             Arithematic obj=new Arithematic();
             obj.operation(num1, num2);
+            Console.ReadLine();
         }
     }
 }

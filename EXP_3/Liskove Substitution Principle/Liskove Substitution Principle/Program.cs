@@ -58,6 +58,7 @@ class Program
 
         Console.WriteLine(s1.Area());
         Console.WriteLine(s2.Area());
+        Console.ReadLine();
     }
 }
 

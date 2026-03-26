@@ -2,18 +2,37 @@
 
 class Program
 {
-    // Declare delegate type
+    // Declare delegate
     delegate int Operation(int a, int b);
 
-    // Static methods
-    static int Add(int a, int b) { return a + b; }
-    static int Sub(int a, int b) { return a - b; }
-    static int Mul(int a, int b) { return a * b; }
-    static int Div(int a, int b) { return a / b; }
+    // Methods
+    static int Add(int a, int b)
+    {
+        return a + b;
+    }
+
+    static int Sub(int a, int b)
+    {
+        return a - b;
+    }
+
+    static int Mul(int a, int b)
+    {
+        return a * b;
+    }
+
+    static int Div(int a, int b)
+    {
+        if (b == 0)
+        {
+            Console.WriteLine("Cannot divide by zero.");
+            return 0;
+        }
+        return a / b;
+    }
 
     static void Main(string[] args)
     {
-        // Ask user for input
         Console.Write("Enter first number: ");
         int x = int.Parse(Console.ReadLine());
 
@@ -21,32 +40,37 @@ class Program
         int y = int.Parse(Console.ReadLine());
 
         Console.WriteLine("Choose operation: add / sub / mul / div");
-        string choice = Console.ReadLine();
+        string choice = Console.ReadLine().ToLower();
 
-        Operation p;
+        Operation p = null;
 
-        // Assign delegate based on user choice
-        switch (choice.ToLower())
+        switch (choice)
         {
             case "add":
                 p = Add;
                 break;
+
             case "sub":
                 p = Sub;
                 break;
+
             case "mul":
                 p = Mul;
                 break;
+
             case "div":
                 p = Div;
                 break;
+
             default:
                 Console.WriteLine("Invalid choice!");
                 return;
         }
 
-        // Invoke delegate
         int result = p(x, y);
-        Console.WriteLine($"Result: {result}");
+
+        Console.WriteLine("Result: " + result);
+
+        Console.ReadLine();
     }
 }

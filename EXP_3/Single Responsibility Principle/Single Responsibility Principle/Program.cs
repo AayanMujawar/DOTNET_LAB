@@ -67,5 +67,6 @@ class Program
         generator.CreateInvoice();
         repo.SaveToDb();
         mail.SendEmail();
+        Console.ReadLine();
     }
 }

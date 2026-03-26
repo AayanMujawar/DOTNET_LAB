@@ -58,5 +58,6 @@ class Program
 
         IEat eater = new Human();
         eater.Eat();
+        Console.ReadLine();
     }
 }

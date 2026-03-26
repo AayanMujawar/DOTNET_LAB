@@ -66,5 +66,6 @@ class Program
 
         service.ProcessPayment(new UpiPayment());
         service.ProcessPayment(new CardPayment());
+        Console.ReadLine();
     }
 }

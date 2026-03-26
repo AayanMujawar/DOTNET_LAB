@@ -1,36 +1,12 @@
-﻿//High - level modules must depend on abstraction, not concrete classes.
+﻿using System;
 
-/*public class Notification
-{
-    private Email email = new Email();  // tightly coupled
-
-    public void Send()
-    {
-        email.SendEmail();
-    }
-}
-
-public class Email
-{
-    public void SendEmail() 
-    { 
-        Console.WriteLine("Email sent");
-    }
-}
-
-class Program
-{
-    static void Main(string[] args)
-    {
-        Notification notification = new Notification();
-        notification.Send();
-    }
-}*/
-
+// Abstraction
 public interface IMessage
 {
     void SendMessage();
 }
+
+// Concrete class 1
 public class EmailMessage : IMessage
 {
     public void SendMessage()
@@ -39,6 +15,7 @@ public class EmailMessage : IMessage
     }
 }
 
+// Concrete class 2
 public class SmsMessage : IMessage
 {
     public void SendMessage()
@@ -47,30 +24,36 @@ public class SmsMessage : IMessage
     }
 }
 
-
+// High-level module depending on abstraction
 public class Notification
 {
-    private readonly IMessage _message;
+    private readonly IMessage message;
 
     public Notification(IMessage message)
     {
-        _message = message;
+        this.message = message;
     }
 
     public void Notify()
     {
-        _message.SendMessage();
+        message.SendMessage();
     }
 }
 
 class Program
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        Notification n1 = new Notification(new EmailMessage());
+        // Send Email
+        IMessage email = new EmailMessage();
+        Notification n1 = new Notification(email);
         n1.Notify();
 
-        Notification n2 = new Notification(new SmsMessage());
+        // Send SMS
+        IMessage sms = new SmsMessage();
+        Notification n2 = new Notification(sms);
         n2.Notify();
+
+        Console.ReadLine();
     }
 }
