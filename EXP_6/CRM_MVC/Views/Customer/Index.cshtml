@@ -1,0 +1,22 @@
+﻿@model List<CRM_MVC.Models.Customer>
+
+<h2>Customer List</h2>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+    </tr>
+
+    @foreach (var customer in Model)
+    {
+        <tr>
+            <td>@customer.Id</td>
+            <td>@customer.Name</td>
+            <td>@customer.Email</td>
+            <td>@customer.Phone</td>
+        </tr>
+    }
+</table>
