@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TechStore</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        .navbar-custom {
+            background-color: #232f3e; /* Amazon Dark Blue */
+        }
+        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+            color: white !important;
+            font-weight: bold;
+        }
+        .navbar-custom .nav-link:hover {
+            color: #f3a847 !important; /* Amazon Orange hover */
+        }
+        .footer-custom {
+            background-color: #232f3e;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-custom border-bottom box-shadow mb-4">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">🛒 TechStore(Amazon Clone)</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Storefront</a>
+                        </li>
+                        
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item bg-warning rounded ms-2">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Customers" asp-action="Index" style="color: black !important;">⚙️ Admin: Manage Customers</a>
+                                </li>
+                            }
+                            <li class="nav-item ms-auto pe-2">
+                                <a class="nav-link" asp-area="" asp-controller="Cart" asp-action="Index" style="cursor: pointer;">
+                                    🛒 Cart (<span id="cartCount">0</span>)
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <span class="nav-link text-white-50">Hello, @User.Identity.Name!</span>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-danger fw-bold" asp-area="" asp-controller="Auth" asp-action="Logout">Logout</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item ms-auto">
+                                <a class="nav-link fw-bold" asp-area="" asp-controller="Auth" asp-action="Login">Login</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted footer-custom text-center py-3">
+        <div class="container">
+            &copy; 2026 - TechStore E-Commerce Project 
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <script>
+        // Fetch real session cart count on load
+        $(document).ready(function() {
+            if(document.getElementById('cartCount')) {
+                fetch('/Cart/GetCartCount')
+                .then(r => r.json())
+                .then(d => { document.getElementById('cartCount').innerText = d.cartCount; })
+                .catch(e => console.error("Could not fetch cart count"));
+            }
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

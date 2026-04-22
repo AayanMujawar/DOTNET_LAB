@@ -1,0 +1,87 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center mt-4">
+    <h1 class="display-4 fw-bold">Welcome to TechStore</h1>
+    <p class="lead text-muted">Your Premium University Electronics Provider.</p>
+</div>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>🔥 Trending Tech</h3>
+    </div>
+    
+    <div class="row" id="productContainer">
+        <!-- Products will be injected here via Javascript -->
+        <div class="text-center mt-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p>Fetching Inventory...</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function addToCart(buttonElement, name, price) {
+            
+            // Server Sync POST
+            fetch('/Cart/AddToCart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ productName: name, price: parseFloat(price) })
+            })
+            .then(res => {
+                if(res.status === 401) {
+                    alert('Please Login to use the shopping cart!');
+                    return null;
+                }
+                return res.json();
+            })
+            .then(data => {
+                if(data) {
+                    document.getElementById('cartCount').innerText = data.cartCount;
+                    buttonElement.innerText = "✓ Added";
+                    buttonElement.classList.replace('btn-warning', 'btn-success');
+                    setTimeout(() => {
+                        buttonElement.innerText = "Add to Cart";
+                        buttonElement.classList.replace('btn-success', 'btn-warning');
+                    }, 1500);
+                }
+            })
+            .catch(e => console.error(e));
+        }
+
+        $(document).ready(function () {
+            fetch('http://localhost:5240/api/product')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('productContainer');
+                    container.innerHTML = ''; 
+                    
+                    data.forEach(product => {
+                        // Pass name and price into click handler
+                        const card = `
+                            <div class="col-md-3 mb-4">
+                                <div class="card h-100 shadow-sm border-0">
+                                    <div style="background-color: #f8f9fa; height: 150px; display: flex; align-items: center; justify-content: center;">
+                                        <h1 class="text-muted">💻</h1>
+                                    </div>
+                                    <div class="card-body text-center d-flex flex-column">
+                                        <h5 class="card-title fw-bold">` + product.name + `</h5>
+                                        <p class="card-text text-success fs-4 mt-auto mb-3">$` + product.price + `</p>
+                                        <button onclick="addToCart(this, '`+product.name+`', `+product.price+`)" class="btn btn-warning w-100 fw-bold">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        container.innerHTML += card;
+                    });
+                })
+                .catch(error => {
+                    document.getElementById('productContainer').innerHTML = 
+                        '<div class="alert alert-danger w-100 text-center">Failed to load product repository. Please check server connection.</div>';
+                });
+        });
+    </script>
+}
